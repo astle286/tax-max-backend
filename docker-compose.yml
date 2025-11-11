@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "5001:5000"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - db
+
+  family-service:
+    build: ./family-service
+    ports:
+      - "5002:5000"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - db
+
+  tax-service:
+    build: ./tax-service
+    ports:
+      - "5003:5000"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - db
+
+  export-service:
+    build: ./export-service
+    ports:
+      - "5004:5000"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: taxmax
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: taxmax_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-auth-db.sql:/docker-entrypoint-initdb.d/init-auth-db.sql
+      - ./init-tax-db.sql:/docker-entrypoint-initdb.d/init-tax-db.sql
+
+volumes:
+  pgdata:
