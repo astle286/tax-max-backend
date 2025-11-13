@@ -1,5 +1,12 @@
 __pycache__/
 *.pyc
-*.log
-.env
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.db
+*.sqlite3
+.DS_Store
 pgdata/

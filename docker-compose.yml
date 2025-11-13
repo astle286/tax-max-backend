@@ -4,7 +4,7 @@ services:
   auth-service:
     build: ./auth-service
     ports:
-      - "5001:5000"
+      - "5001:5001"
     environment:
       - FLASK_ENV=development
     depends_on:
@@ -13,7 +13,7 @@ services:
   family-service:
     build: ./family-service
     ports:
-      - "5002:5000"
+      - "5002:5002"
     environment:
       - FLASK_ENV=development
     depends_on:
@@ -22,7 +22,7 @@ services:
   tax-service:
     build: ./tax-service
     ports:
-      - "5003:5000"
+      - "5003:5003"
     environment:
       - FLASK_ENV=development
     depends_on:
@@ -31,7 +31,7 @@ services:
   export-service:
     build: ./export-service
     ports:
-      - "5004:5000"
+      - "5004:5004"
     environment:
       - FLASK_ENV=development
     depends_on:
@@ -46,8 +46,17 @@ services:
       POSTGRES_DB: taxmax_db
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init-family-db.sql:/docker-entrypoint-initdb.d/init-family-db.sql
       - ./init-auth-db.sql:/docker-entrypoint-initdb.d/init-auth-db.sql
       - ./init-tax-db.sql:/docker-entrypoint-initdb.d/init-tax-db.sql
+      
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxmax -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
