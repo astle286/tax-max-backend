@@ -1,12 +1,25 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
+.env
+
+# Docker
+*.log
+*.pid
 *.db
 *.sqlite3
+*.sock
+*.tar
+*.gz
+*.img
+*.bak
+
+# VSCode or IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
-pgdata/
+Thumbs.db

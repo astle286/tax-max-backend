@@ -1,41 +1,85 @@
-version: '3.9'
+
 
 services:
   auth-service:
     build: ./auth-service
     ports:
       - "5001:5001"
-    environment:
-      - FLASK_ENV=development
+    env_file:
+      - ./auth-service/.env
     depends_on:
-      - db
+      - auth_db
+
+  auth_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+      POSTGRES_DB: auth_db
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
 
   family-service:
     build: ./family-service
     ports:
       - "5002:5002"
-    environment:
-      - FLASK_ENV=development
+    env_file:
+      - ./family-service/.env
     depends_on:
-      - db
+      - family_db
+
+  family_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: family_user
+      POSTGRES_PASSWORD: family_pass
+      POSTGRES_DB: family_db
+    volumes:
+      - family_db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
 
   tax-service:
     build: ./tax-service
     ports:
       - "5003:5003"
-    environment:
-      - FLASK_ENV=development
+    env_file:
+      - ./tax-service/.env
     depends_on:
-      - db
+      - tax_db
+
+  tax_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: tax_user
+      POSTGRES_PASSWORD: tax_pass
+      POSTGRES_DB: tax_db
+    volumes:
+      - tax_db_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
 
   export-service:
     build: ./export-service
     ports:
       - "5004:5004"
-    environment:
-      - FLASK_ENV=development
+    env_file:
+      - ./export-service/.env
     depends_on:
-      - db
+      - export_db
+
+  export_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: export_user
+      POSTGRES_PASSWORD: export_pass
+      POSTGRES_DB: export_db
+    volumes:
+      - export_db_data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
 
   db:
     image: postgres:15
@@ -49,7 +93,6 @@ services:
       - ./init-family-db.sql:/docker-entrypoint-initdb.d/init-family-db.sql
       - ./init-auth-db.sql:/docker-entrypoint-initdb.d/init-auth-db.sql
       - ./init-tax-db.sql:/docker-entrypoint-initdb.d/init-tax-db.sql
-      
     ports:
       - "5432:5432"
     healthcheck:
@@ -60,3 +103,7 @@ services:
 
 volumes:
   pgdata:
+  auth_db_data:
+  family_db_data:
+  tax_db_data:
+  export_db_data:

@@ -4,16 +4,12 @@ import os
 from .routes import tax_bp
 import time
 from sqlalchemy.exc import OperationalError
+from config import Config
 
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'supersecretkey')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL',
-    'postgresql://taxmax:secret@db:5432/tax_db'
-    )
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config.from_object(Config)
 
     db.init_app(app)
 

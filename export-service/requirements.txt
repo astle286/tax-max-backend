@@ -3,3 +3,6 @@ requests
 reportlab
 pandas
 xlsxwriter
+python-dotenv
+Flask-SQLAlchemy
+openpyxl
