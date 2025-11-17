@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from .models import Family, Member
 from .extensions import db
 
-family_bp = Blueprint("family", __name__, url_prefix="/family")
+family_bp = Blueprint("family", __name__)
 
 @family_bp.route("/")
 def index():
@@ -13,7 +13,7 @@ def list_families():
     families = Family.query.all()
     return jsonify([{"id": f.id, "family_number": f.family_number} for f in families])
 
-@family_bp.route("/create", methods=["POST"])
+@family_bp.route("/family", methods=["POST"])
 def add_family():
     data = request.json
     family = Family(family_number=data["family_number"])

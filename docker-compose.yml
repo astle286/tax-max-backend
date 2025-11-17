@@ -80,6 +80,25 @@ services:
       - export_db_data:/var/lib/postgresql/data
     ports:
       - "5436:5432"
+  dashboard-service:
+    build: ./dashboard-service
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./dashboard-service/.env
+    depends_on:
+      - dashboard_db
+
+  dashboard_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dashboard_user
+      POSTGRES_PASSWORD: dashboard_pass
+      POSTGRES_DB: dashboard_db
+    volumes:
+      - dashboard_db_data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
 
   db:
     image: postgres:15
@@ -93,6 +112,8 @@ services:
       - ./init-family-db.sql:/docker-entrypoint-initdb.d/init-family-db.sql
       - ./init-auth-db.sql:/docker-entrypoint-initdb.d/init-auth-db.sql
       - ./init-tax-db.sql:/docker-entrypoint-initdb.d/init-tax-db.sql
+      - ./init-export-db.sql:/docker-entrypoint-initdb.d/init-export-db.sql
+      - ./init-dashboard-db.sql:/docker-entrypoint-initdb.d/init-dashboard-db.sql
     ports:
       - "5432:5432"
     healthcheck:
@@ -107,3 +128,4 @@ volumes:
   family_db_data:
   tax_db_data:
   export_db_data:
+  dashboard_db_data:

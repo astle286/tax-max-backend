@@ -1,0 +1,2 @@
+CREATE DATABASE export_db;
+GRANT ALL PRIVILEGES ON DATABASE export_db TO taxmax;

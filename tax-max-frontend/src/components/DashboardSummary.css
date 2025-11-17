@@ -1,0 +1,15 @@
+.dashboard-summary {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.dashboard-summary ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-summary li {
+  margin: 0.5rem 0;
+}
