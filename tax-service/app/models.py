@@ -1,11 +1,12 @@
 from .extensions import db
 from datetime import date
 
-class TaxPayment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    member_name = db.Column(db.String(100), nullable=False)
-    family_number = db.Column(db.String(20), nullable=False)
-    date_received = db.Column(db.Date, nullable=False)
-    mode = db.Column(db.String(50), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    reason = db.Column(db.String(200), nullable=True)
+class Transaction(db.Model):
+    __tablename__ = "transactions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    details = db.Column(db.String)
+    amount = db.Column(db.Float)
+    date = db.Column(db.Date)
+    receipt = db.Column(db.String)
+
+    family_id = db.Column(db.String, db.ForeignKey("families.id"), nullable=False)

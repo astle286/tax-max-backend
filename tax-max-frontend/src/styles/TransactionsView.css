@@ -1,0 +1,97 @@
+.transactions-view {
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.transactions-view h2 {
+  margin-bottom: 1rem;
+  color: #17a2b8; /* teal accent for finance */
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.transactions-header .actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.transactions-header button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.transactions-header .add-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.transactions-header .add-btn:hover {
+  background-color: #218838;
+}
+
+.transactions-header .export-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.transactions-header .export-btn:hover {
+  background-color: #0056b3;
+}
+
+.transactions-list {
+  margin-top: 2rem;
+}
+
+.transactions-list h4 {
+  margin-bottom: 0.8rem;
+  color: #555;
+}
+
+.transactions-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fafafa;
+}
+
+.transactions-list th,
+.transactions-list td {
+  border: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.transactions-list th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.transactions-list tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.transactions-list tr:hover {
+  background-color: #eef;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.delete-btn {
+  background-color: #d9534f;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #c9302c;
+}

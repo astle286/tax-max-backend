@@ -7,6 +7,9 @@ services:
       - "5001:5001"
     env_file:
       - ./auth-service/.env
+    environment:
+      - RUNNING_IN_DOCKER=true
+      - DATABASE_URL=postgresql://auth_user:auth_pass@auth_db:5432/auth_db
     depends_on:
       - auth_db
 
@@ -27,6 +30,9 @@ services:
       - "5002:5002"
     env_file:
       - ./family-service/.env
+    environment:
+      - RUNNING_IN_DOCKER=true
+      - DATABASE_URL=postgresql://family_user:family_pass@family_db:5432/family_db
     depends_on:
       - family_db
 

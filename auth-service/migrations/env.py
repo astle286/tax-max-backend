@@ -1,0 +1,58 @@
+from logging.config import fileConfig
+import os
+
+from sqlalchemy import engine_from_config, pool
+from alembic import context
+from app.models import db
+from dotenv import load_dotenv
+
+# Load whichever .env is present
+load_dotenv()
+
+config = context.config
+
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+target_metadata = db.metadata
+
+# Smart DB URL selection
+if os.getenv("RUNNING_IN_DOCKER") == "true":
+    # Inside Docker: connect to the auth_db service on port 5432
+    database_url = os.getenv("DOCKER_DATABASE_URL", "postgresql://auth_user:auth_pass@auth_db:5432/auth_db")
+else:
+    # On host: connect via localhost:5433
+    database_url = os.getenv("DATABASE_URL", "postgresql://auth_user:auth_pass@localhost:5433/auth_db")
+
+if database_url:
+    config.set_main_option("sqlalchemy.url", database_url)
+
+
+def run_migrations_offline() -> None:
+    url = config.get_main_option("sqlalchemy.url")
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+    )
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def run_migrations_online() -> None:
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+    with connectable.connect() as connection:
+        context.configure(connection=connection, target_metadata=target_metadata)
+        with context.begin_transaction():
+            context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()

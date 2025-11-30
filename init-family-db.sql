@@ -1,2 +1,3 @@
 CREATE DATABASE family_db;
 GRANT ALL PRIVILEGES ON DATABASE family_db TO taxmax;
+

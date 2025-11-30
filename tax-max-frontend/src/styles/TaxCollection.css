@@ -1,0 +1,115 @@
+.tax-collection {
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.tax-collection h2 {
+  margin-bottom: 1rem;
+}
+
+.header {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.photo {
+  width: 120px;
+  height: 120px;
+  background-color: #eee;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.meta strong {
+  font-weight: bold;
+}
+
+.members ul {
+  list-style: none;
+  padding: 0;
+}
+
+.members li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.tax-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.tax-form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.tax-form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tax-form button:hover {
+  background-color: #005fa3;
+}
+
+.tax-table {
+  margin-top: 2rem;
+}
+
+.tax-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tax-table th,
+.tax-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.tax-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.tax-table a {
+  color: #0077cc;
+  text-decoration: underline;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.actions button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background-color: #005fa3;
+}

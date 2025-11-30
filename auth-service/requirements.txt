@@ -4,3 +4,10 @@ psycopg2-binary
 flask-bcrypt
 flask-login
 python-dotenv
+PyJWT==2.8.0
+sqlalchemy
+flask-cors==3.0.10
+alembic
+Flask-Migrate
+Werkzeug
+flask-cors

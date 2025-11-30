@@ -1,0 +1,167 @@
+{
+  "info": {
+    "name": "Family Service API",
+    "_postman_id": "12345678-abcd-efgh-ijkl-987654321000",
+    "description": "Postman collection for testing Family Service endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Check Service",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5002/family/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", ""]
+        }
+      }
+    },
+    {
+      "name": "Create Family",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"family_number\": \"FAM001\",\n  \"group\": \"Group A\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5002/family",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family"]
+        }
+      }
+    },
+    {
+      "name": "List Families",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5002/family/list",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "list"]
+        }
+      }
+    },
+    {
+      "name": "Get Family by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5002/family/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "1"]
+        }
+      }
+    },
+    {
+      "name": "Update Family",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"family_number\": \"FAM001-UPDATED\",\n  \"group\": \"Group B\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5002/family/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Family",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5002/family/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "1"]
+        }
+      }
+    },
+    {
+      "name": "Add Member",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"gender\": \"Male\",\n  \"dob\": \"1980-05-15\",\n  \"role\": \"Father\",\n  \"mobile\": \"9876543210\",\n  \"email\": \"john@example.com\",\n  \"family_id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5002/family/member",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "member"]
+        }
+      }
+    },
+    {
+      "name": "Update Member",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"mobile\": \"1234567890\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5002/family/member/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "member", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Member",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5002/family/member/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "member", "1"]
+        }
+      }
+    },
+    {
+      "name": "Search Members",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5002/family/search?q=John",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5002",
+          "path": ["family", "search"],
+          "query": [{ "key": "q", "value": "John" }]
+        }
+      }
+    }
+  ]
+}

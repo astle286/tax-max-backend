@@ -1,0 +1,99 @@
+.member-view {
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.member-view h2 {
+  margin-bottom: 1rem;
+  color: #007bff;
+}
+
+.member-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.member-photo {
+  width: 100px;
+  height: 100px;
+  background: #ddd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #555;
+}
+
+.meta {
+  line-height: 1.6;
+}
+
+.meta strong {
+  color: #444;
+}
+
+.family-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+}
+
+.family-link:hover {
+  color: #0056b3;
+}
+
+.transactions {
+  margin-top: 2rem;
+}
+
+.transactions h4 {
+  margin-bottom: 0.8rem;
+  color: #555;
+}
+
+.transactions table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fafafa;
+}
+
+.transactions th,
+.transactions td {
+  border: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.transactions th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.transactions tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.transactions tr:hover {
+  background-color: #eef;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.delete-btn {
+  background-color: #d9534f;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #c9302c;
+}
