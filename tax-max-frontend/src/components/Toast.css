@@ -1,0 +1,19 @@
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: #333;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  animation: fadeInOut 2s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(20px); }
+  10% { opacity: 0.9; transform: translateY(0); }
+  90% { opacity: 0.9; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(20px); }
+}

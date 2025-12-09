@@ -8,6 +8,8 @@ import DeleteFamilyButton from "./../components/DeleteFamilyButton";
 import DeleteMemberButton from "./../components/DeleteMemberButton";
 import DeleteTransactionButton from "./../components/DeleteTransactionButton"; // ✅ fixed import
 import { getUserRole } from "./../utils/auth";
+import Toast from "./../components/Toast";
+
 
 
 function FamilyView() {
@@ -17,6 +19,8 @@ function FamilyView() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [toast, setToast] = useState(null);
+
 
   const navigate = useNavigate();
 
@@ -62,7 +66,17 @@ function FamilyView() {
         <div className="family-photo">PHOTO</div>
         <div>
           <strong>FAMILY_ID:</strong> {family.id}<br />
-          <span className="family-number-badge">{family.family_number}</span><br />
+          <strong>FAMILY_NUMBER:</strong>{" "}
+          <span className="family-number-badge">{family.family_number}</span>
+          <button
+          className="copy-btn"
+          onClick={() => {
+            navigator.clipboard.writeText(family.family_number);
+            setToast("Family number copied!");
+            setTimeout(() => setToast(null), 2000); // auto-hide after 2s
+          }}
+           >📋</button>
+           <br />
           <strong>GROUP:</strong> {family.group}
         </div>
       </div>
@@ -77,7 +91,15 @@ function FamilyView() {
           ✏️ Edit Family
         </button>
       )}
-        <DeleteFamilyButton familyId={family.id} />
+        <DeleteFamilyButton
+          familyId={family.id}
+          onDeleted={() => {
+            setToast("Family deleted!");
+            setTimeout(() => setToast(null), 2000);
+            navigate("/FamilyRecords");
+        }}
+              />
+
       </div>
 
       <div className="members-list">
@@ -115,7 +137,11 @@ function FamilyView() {
                 <td>
                   <DeleteMemberButton
                     memberId={m.id}
-                    onDeleted={(id) => setMembers(members.filter(mem => mem.id !== id))}
+                    onDeleted={(id) => {
+                      setMembers(members.filter(mem => mem.id !== id));
+                      setToast("Member deleted!");
+                      setTimeout(() => setToast(null), 2000);
+                    }}
                   />
                 </td>
               </tr>
@@ -151,14 +177,20 @@ function FamilyView() {
                   <td>
                     <DeleteTransactionButton
                       transactionId={t.id}
-                      onDeleted={(id) => setTransactions(transactions.filter(tx => tx.id !== id))}
+                      onDeleted={(id) => {
+                      setTransactions(transactions.filter(tx => tx.id !== id));
+                      setToast("Transaction deleted!");
+                      setTimeout(() => setToast(null), 2000);
+                    }}
                     />
+
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
+        {toast && <Toast message={toast} />}
       </div>
     </motion.div>
   );
