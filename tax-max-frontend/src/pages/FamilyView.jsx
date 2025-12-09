@@ -62,6 +62,7 @@ function FamilyView() {
         <div className="family-photo">PHOTO</div>
         <div>
           <strong>FAMILY_ID:</strong> {family.id}<br />
+          <span className="family-number-badge">{family.family_number}</span><br />
           <strong>GROUP:</strong> {family.group}
         </div>
       </div>

@@ -58,6 +58,7 @@ function MemberView() {
           <strong>MOBILE:</strong> {member.mobile}<br />
           <strong>EMAIL:</strong> {member.email}<br />
           <strong>MEMBER_ID:</strong> {member.id}<br />
+          <strong>FAMILY_NUMBER:</strong> {member.family_number}<br />
           <strong>FAMILY_ID:</strong>{" "}
           <button className="family-link" onClick={() => navigate(`/family/${member.family_id}`)}>
             {member.family_id}

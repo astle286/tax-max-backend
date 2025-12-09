@@ -30,6 +30,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
 .filters button:first-of-type {
@@ -37,9 +38,17 @@
   color: #fff;
 }
 
+.filters button:first-of-type:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
 .filters button:last-of-type {
   background-color: #28a745;
   color: #fff;
+}
+
+.filters button:last-of-type:hover:not(:disabled) {
+  background-color: #1e7e34;
 }
 
 .filters button:disabled {
@@ -56,29 +65,83 @@
   color: #555;
 }
 
-.results table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fafafa;
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
-.results th,
-.results td {
+.card {
+  background: #fff;
   border: 1px solid #ddd;
-  padding: 0.6rem;
-  text-align: left;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.results th {
-  background-color: #f1f1f1;
-  font-weight: bold;
+.card:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  transform: translateY(-3px) scale(1.02);
 }
 
-.results tr:nth-child(even) {
-  background-color: #f9f9f9;
+.card h3 {
+  margin: 0 0 0.5rem;
+  color: #2c3e50;
 }
 
-.results tr:hover {
-  background-color: #eef;
-  transition: background-color 0.2s ease-in-out;
+.family-link {
+  margin-top: 0.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.family-link:hover {
+  background: #0056b3;
+}
+
+.active-input {
+  border: 2px solid #007bff;
+  outline: none;
+  background-color: #f0f8ff;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem; /* make symbols larger */
+  transition: background-color 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.no-results {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-top: 1rem;
 }

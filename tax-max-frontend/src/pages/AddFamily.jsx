@@ -7,13 +7,14 @@ import ErrorPage from "./../components/ErrorPage";
 import BackButton from "../components/BackButton";
 
 function AddFamily() {
-  const [familyNumber, setFamilyNumber] = useState(""); // backend expects family_number
+  const [familyNumber, setFamilyNumber] = useState("");
+  const [familyId, setFamilyId] = useState(null);
   const [group, setGroup] = useState("");
   const [member, setMember] = useState({
     name: "",
     gender: "",
     dob: "",
-    role: "",   // ✅ renamed from tag to role
+    role: "",
     mobile: "",
     email: ""
   });
@@ -22,15 +23,32 @@ function AddFamily() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ✅ Auto-generate family number when group changes
+  // ✅ Toast state
+  const [toast, setToast] = useState(null);
+
+  // ✅ Cancel confirmation modal state
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
+  // ✅ Create family when group is selected
   useEffect(() => {
-    if (group) {
-      const timestamp = Date.now().toString().slice(-4); // last 4 digits for uniqueness
-      const newFamilyId = `FAM-G${group}-${timestamp}`;
-      setFamilyNumber(newFamilyId);
-    } else {
-      setFamilyNumber("");
-    }
+    const createFamily = async () => {
+      if (!group) return;
+
+      try {
+        const res = await axios.post("http://localhost:5002/family", { group });
+        setFamilyId(res.data.id);
+        setFamilyNumber(res.data.family_number);
+        setToast({ type: "success", message: "Family created successfully!" });
+      } catch (err) {
+        console.error("Failed to create family:", err);
+        const backendError = err.response?.data;
+        setError(
+          backendError || { error: "Create Failed", message: "Unexpected error occurred" }
+        );
+      }
+    };
+
+    createFamily();
   }, [group]);
 
   const handleChange = (e) => {
@@ -55,6 +73,7 @@ function AddFamily() {
         mobile: "",
         email: ""
       });
+      setToast({ type: "info", message: "Member added to list." });
     }
   };
 
@@ -67,45 +86,54 @@ function AddFamily() {
   const handleRemove = () => {
     setMembers(members.filter((_, i) => !selected.includes(i)));
     setSelected([]);
+    setToast({ type: "warning", message: "Selected members removed." });
   };
 
   const handleFinish = async () => {
     setLoading(true);
     setError(null);
     try {
-      // ✅ Step 1: Create family
-      const familyRes = await axios.post("http://localhost:5002/family", {
-        family_number: familyNumber,
-        group
-      });
-
-      const familyId = familyRes.data.id;
-
-      // ✅ Step 2: Add members linked to family
       for (const m of members) {
         await axios.post("http://localhost:5002/family/member", {
           name: m.name,
           gender: m.gender,
           dob: m.dob,
-          role: m.role, // backend expects "role"
+          role: m.role,
           mobile: m.mobile,
           email: m.email,
           family_id: familyId
         });
       }
 
-      alert("Family and members saved successfully!");
-      setFamilyNumber("");
+      setToast({ type: "success", message: "Family and members saved successfully!" });
       setGroup("");
       setMembers([]);
+      setFamilyNumber("");
+      setFamilyId(null);
     } catch (err) {
-      console.error("Failed to save family:", err);
+      console.error("Failed to save members:", err);
       const backendError = err.response?.data;
       setError(
         backendError || { error: "Save Failed", message: "Unexpected error occurred" }
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    if (!familyId) return;
+    try {
+      await axios.delete(`http://localhost:5002/family/${familyId}`);
+      setToast({ type: "error", message: "Family creation cancelled." });
+    } catch (err) {
+      console.error("Failed to cancel family:", err);
+    } finally {
+      setGroup("");
+      setMembers([]);
+      setFamilyNumber("");
+      setFamilyId(null);
+      setShowCancelConfirm(false);
     }
   };
 
@@ -124,15 +152,19 @@ function AddFamily() {
     >
       <h2>Add Family</h2>
 
+      {/* ✅ Toast Notification */}
+      {toast && (
+        <div className={`toast toast-${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
       <div className="family-form" style={{ marginBottom: "1rem" }}>
-        {/* ✅ Family number is auto-generated and read-only */}
         <input
           placeholder="FAMILY_NUMBER"
           value={familyNumber}
           readOnly
         />
-
-        {/* ✅ Group dropdown */}
         <select value={group} onChange={(e) => setGroup(e.target.value)}>
           <option value="">Select Group</option>
           {[...Array(10)].map((_, i) => (
@@ -233,7 +265,42 @@ function AddFamily() {
         <button onClick={handleFinish} disabled={loading}>
           {loading ? "Saving..." : "FINISH"}
         </button>
+        <button 
+          onClick={() => setShowCancelConfirm(true)}
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            border: "none",
+            padding: "0.5rem 1rem",
+            cursor: "pointer"
+          }}
+        >
+          CANCEL FAMILY
+        </button>
       </div>
+
+      {/* ✅ Cancel Confirmation Modal */}
+      {showCancelConfirm && (
+  <div className="modal-overlay">
+    <div className="modal">
+      <h4>Are you sure you want to cancel this family?</h4>
+      <p>This will delete the family record from the backend.</p>
+      <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+        <button
+          onClick={async () => {
+            await handleCancel();
+            setShowCancelConfirm(false);
+          }}
+          style={{ backgroundColor: "red", color: "white" }}
+        >
+          Yes, Cancel
+        </button>
+        <button onClick={() => setShowCancelConfirm(false)}>No, Keep</button>
+      </div>
+    </div>
+  </div>
+)}
+
     </motion.div>
   );
 }

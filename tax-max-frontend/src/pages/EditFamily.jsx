@@ -100,10 +100,6 @@ function EditFamily() {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4 }}
     >
-      {/* ✅ Sticky BackButton */}
-      <div style={{ position: "sticky", top: 0, zIndex: 1000 }}>
-        <BackButton />
-      </div>
 
       <h2>Edit Family</h2>
       <div><strong>FAMILY_ID:</strong> {family.id}</div>

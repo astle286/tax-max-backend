@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from datetime import datetime
 from .models import Family, Member
 from .extensions import db
 
@@ -8,18 +9,45 @@ family_bp = Blueprint("family", __name__, url_prefix="/family")
 def index():
     return "Family Service is running!"
 
-# ✅ List all families with member counts
+# ✅ List families with pagination and full member details
 @family_bp.route("/list", methods=["GET"])
 def list_families():
-    families = Family.query.all()
-    return jsonify([
-        {
-            "id": f.id,
-            "family_number": f.family_number,
-            "group": f.group,
-            "members": len(f.members)
-        } for f in families
-    ])
+    # Get query params: page & limit
+    try:
+        page = int(request.args.get("page", 1))
+        limit = int(request.args.get("limit", 10))
+    except ValueError:
+        return jsonify({"error": "Invalid pagination parameters"}), 400
+
+    # Query with pagination
+    families = Family.query.paginate(page=page, per_page=limit, error_out=False)
+
+    return jsonify({
+        "page": page,
+        "limit": limit,
+        "total": families.total,
+        "pages": families.pages,
+        "families": [
+            {
+                "id": f.id,
+                "family_number": f.family_number,
+                "group": f.group,
+                "members": [
+                    {
+                        "id": m.id,
+                        "name": m.name,
+                        "gender": m.gender,
+                        "dob": m.dob,
+                        "role": m.role,
+                        "mobile": m.mobile,
+                        "email": m.email
+                    } for m in f.members
+                ]
+            } for f in families.items
+        ]
+    })
+
+
 
 # ✅ Get full details of one family
 @family_bp.route("/<int:family_id>", methods=["GET"])
@@ -45,26 +73,28 @@ def get_family(family_id):
         ]
     })
 
-# ✅ Create new family (cleaned up to POST /family)
+# ✅ Create new family (backend generates family_number)
 @family_bp.route("", methods=["POST"])
 def add_family():
     data = request.json or {}
+    group = data.get("group")
 
-    if not data.get("family_number"):
-        return jsonify({"error": "family_number is required"}), 400
+    if not group:
+        return jsonify({"error": "group is required"}), 400
 
-    # Prevent duplicates
-    existing = Family.query.filter_by(family_number=data["family_number"]).first()
-    if existing:
-        return jsonify({"error": "family_number already exists"}), 409
+    year = datetime.now().year
+    count = Family.query.filter_by(group=group).count() + 1
+    family_number = f"FAM-G{group}-{year}-{count}"
 
-    family = Family(
-        family_number=data["family_number"],
-        group=data.get("group")
-    )
+    family = Family(family_number=family_number, group=group)
     db.session.add(family)
     db.session.commit()
-    return jsonify({"id": family.id, "family_number": family.family_number}), 201
+
+    return jsonify({
+        "id": family.id,
+        "family_number": family.family_number,
+        "group": family.group
+    }), 201
 
 # ✅ Update family
 @family_bp.route("/<int:family_id>", methods=["PUT"])
@@ -74,7 +104,6 @@ def update_family(family_id):
         return jsonify({"error": "Family not found"}), 404
 
     data = request.json or {}
-    family.family_number = data.get("family_number", family.family_number)
     family.group = data.get("group", family.group)
     db.session.commit()
     return jsonify({"message": "Family updated"})
@@ -90,11 +119,10 @@ def delete_family(family_id):
     db.session.commit()
     return jsonify({"message": "Family deleted"})
 
-# ✅ Add member to family
+# ✅ Add member
 @family_bp.route("/member", methods=["POST"])
 def add_member():
     data = request.json or {}
-
     if not data.get("name"):
         return jsonify({"error": "name is required"}), 400
     if not data.get("family_id"):
@@ -145,23 +173,6 @@ def delete_member(member_id):
     db.session.commit()
     return jsonify({"message": "Member deleted"})
 
-# ✅ Search members by name
-@family_bp.route("/search", methods=["GET"])
-def search_member():
-    q = request.args.get("q", "")
-    if not q:
-        return jsonify({"error": "Search query required"}), 400
-
-    members = Member.query.filter(Member.name.ilike(f"%{q}%")).all()
-    return jsonify([
-        {
-            "id": m.id,
-            "name": m.name,
-            "family_id": m.family_id,
-            "role": m.role
-        } for m in members
-    ])
-
 # ✅ Get full details of one member
 @family_bp.route("/member/<int:member_id>", methods=["GET"])
 def get_member(member_id):
@@ -177,5 +188,45 @@ def get_member(member_id):
         "role": member.role,
         "mobile": member.mobile,
         "email": member.email,
-        "family_id": member.family_id
+        "family_id": member.family_id,
+        "family_number": member.family.family_number,
+    })
+
+# ✅ Unified search: families by family_number OR members by name
+@family_bp.route("/search", methods=["GET"])
+def search_family_or_member():
+    q = request.args.get("q", "")
+    if not q:
+        return jsonify({"error": "Search query required"}), 400
+
+    families = Family.query.filter(Family.family_number.ilike(f"%{q}%")).all()
+    members = Member.query.filter(Member.name.ilike(f"%{q}%")).all()
+
+    return jsonify({
+        "families": [
+            {
+                "id": f.id,
+                "family_number": f.family_number,
+                "group": f.group,
+                "members": [
+                    {
+                        "id": m.id,
+                        "name": m.name,
+                        "gender": m.gender,
+                        "dob": m.dob,
+                        "role": m.role,
+                        "mobile": m.mobile,
+                        "email": m.email
+                    } for m in f.members
+                ]
+            } for f in families
+        ],
+        "members": [
+            {
+                "id": m.id,
+                "name": m.name,
+                "family_id": m.family_id,
+                "role": m.role
+            } for m in members
+        ]
     })

@@ -7,7 +7,13 @@ class Family(db.Model):
     family_number = db.Column(db.String(50), unique=True, nullable=False)
     group = db.Column(db.String(50))
 
-    members = db.relationship("Member", back_populates="family", lazy=True)
+    members = db.relationship(
+        "Member",
+        back_populates="family",
+        lazy=True,
+        cascade="all, delete-orphan"   # ✅ ensures members are deleted when family is deleted
+    )
+
 
 
 class Member(db.Model):
